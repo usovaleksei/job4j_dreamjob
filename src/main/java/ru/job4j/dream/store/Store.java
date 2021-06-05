@@ -33,20 +33,32 @@ public class Store {
     }
 
     public Collection<Post> findAllPosts() {
-        return posts.values();
+        return this.posts.values();
     }
 
     public Collection<Candidate> findAllCandidates() {
-        return candidates.values();
+        return this.candidates.values();
     }
 
     public void save(Post post) {
-        post.setId(POST_ID.incrementAndGet());
-        posts.put(post.getId(), post);
+        if (post.getId() == 0) {
+            post.setId(POST_ID.incrementAndGet());
+        }
+        this.posts.put(post.getId(), post);
+    }
+
+    public Post findPostById(int id) {
+        return this.posts.get(id);
     }
 
     public void save(Candidate candidate) {
-        candidate.setId(CAND_ID.incrementAndGet());
-        candidates.put(candidate.getId(), candidate);
+        if (candidate.getId() == 0) {
+            candidate.setId(CAND_ID.incrementAndGet());
+        }
+        this.candidates.put(candidate.getId(), candidate);
+    }
+
+    public Candidate findCandidateById(int id) {
+        return this.candidates.get(id);
     }
 }
