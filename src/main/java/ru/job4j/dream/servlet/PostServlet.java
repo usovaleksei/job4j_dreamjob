@@ -13,9 +13,15 @@ import java.time.LocalDateTime;
 public class PostServlet extends HttpServlet {
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("posts", Store.instOf().findAllPosts());
+        req.getRequestDispatcher("posts.jsp").forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         Store.instOf().save(new Post(Integer.parseInt(req.getParameter("id")), req.getParameter("name"), req.getParameter("description"), LocalDateTime.now()));
-        resp.sendRedirect(req.getContextPath() + "/post/posts.jsp");
+        resp.sendRedirect(req.getContextPath() + "/post/posts.do");
     }
 }
