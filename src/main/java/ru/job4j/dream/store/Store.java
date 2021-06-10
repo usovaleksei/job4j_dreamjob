@@ -61,4 +61,8 @@ public class Store {
     public Candidate findCandidateById(int id) {
         return this.candidates.get(id);
     }
+
+    public void deleteCandidateById(int id) {
+        this.candidates.remove(id);
+    }
 }
