@@ -24,8 +24,7 @@ public class DownloadServlet extends HttpServlet {
         }
         resp.setContentType("application/octet-stream");
         //Выставляем заголовок ответа в протоколе. Таким образом мы сообщаем браузеру, что будем отправлять файл.
-        assert downloadFile != null;
-        resp.setHeader("Content-Disposition", "attachment; filename=\"" + downloadFile.getName() + "\"");
+        resp.setHeader("Content-Disposition", "attachment; filename=\"" + Objects.requireNonNull(downloadFile).getName() + "\"");
         try (FileInputStream stream = new FileInputStream(downloadFile)) {
             //Открываем поток и записываем его в выходной поток servlet.
             resp.getOutputStream().write(stream.readAllBytes());
