@@ -1,6 +1,6 @@
 package ru.job4j.dream.servlet;
 
-import ru.job4j.dream.store.Store;
+import ru.job4j.dream.store.PsqlStore;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +15,7 @@ public class PhotoDeleteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        Store.instOf().deleteCandidateById(Integer.parseInt(id));
+        PsqlStore.instOf().deleteCandidateById(Integer.parseInt(id));
         for (File file : Objects.requireNonNull(new File("c:\\images\\").listFiles())) {
             if (file.getName().substring(0, file.getName().lastIndexOf(".")).equals(id)) {
                 file.delete();

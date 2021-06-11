@@ -18,11 +18,16 @@ public class PsqlMain {
         store.saveCandidate(new Candidate("Aleksei Java"));
         store.saveCandidate(new Candidate("Roman Scala"));
         for (Candidate candidate : store.findAllCandidates()) {
-            System.out.println("id: " + candidate.getId() + " name: " + candidate.getName() );
+            System.out.println("id: " + candidate.getId() + " name: " + candidate.getName() + " photoId: " + candidate.getPhotoId());
         }
 
         System.out.println("Find post by ID: " + store.findPostById(19));
 
         System.out.println("Find candidate by ID: " + store.findCandidateById(17));
+
+        store.deleteCandidateById(24);
+        for (Candidate candidate : store.findAllCandidates()) {
+            System.out.println("id: " + candidate.getId() + " name: " + candidate.getName());
+        }
     }
 }

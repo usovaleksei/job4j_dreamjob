@@ -16,7 +16,7 @@ public class DownloadServlet extends HttpServlet {
         String name = req.getParameter("photoId");
         File downloadFile = null;
         for (File file : Objects.requireNonNull(new File("C:\\images\\").listFiles())) {
-            System.out.println(file.getAbsolutePath());
+            //System.out.println(file.getAbsolutePath());
             if (name.equals(file.getName().substring(0, file.getName().lastIndexOf(".")))) {
                 downloadFile = file;
                 break;

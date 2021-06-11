@@ -5,9 +5,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import ru.job4j.dream.model.Candidate;
-import ru.job4j.dream.store.Store;
+import ru.job4j.dream.store.PsqlStore;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoUploadServlet extends HttpServlet {
@@ -43,8 +41,8 @@ public class PhotoUploadServlet extends HttpServlet {
                     //Если элемент не поле, то это файл и из него можно прочитать весь входной поток и записать его в файл или напрямую в базу данных.
                     File file = new File(folder + File.separator + id + item.getName().substring(item.getName().lastIndexOf(".")));
                     //System.out.println("Абсолютный путь: " + file.getAbsolutePath());
-                    Candidate candidate = Store.instOf().findCandidateById(Integer.parseInt(id));
-                    candidate.setPhotoId(id);
+                    //Candidate candidate = PsqlStore.instOf().findCandidateById(Integer.parseInt(id));
+                    //candidate.setPhotoId(id);
                     try (FileOutputStream out = new FileOutputStream(file)) {
                         out.write(item.getInputStream().readAllBytes());
                     }

@@ -106,6 +106,12 @@ public class PsqlStore implements Store {
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
                     candidate.setId(id.getInt(1));
+                    candidate.setPhotoId(id.getString(1));
+                    try (PreparedStatement ps1 = cn.prepareStatement("update candidate set photoId = (?) where id = (?)")) {
+                        ps1.setString(1, id.getString(1));
+                        ps1.setInt(2, id.getInt(1));
+                        ps1.execute();
+                    }
                 }
             }
         } catch (SQLException throwables) {
@@ -147,5 +153,28 @@ public class PsqlStore implements Store {
             throwables.printStackTrace();
         }
         return candidate;
+    }
+
+    @Override
+    public void deleteCandidateById(int id) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("delete from candidate where id = (?)")) {
+            ps.setInt(1, id);
+            ps.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(int id) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("update candidate set name = (?) where id = (?)")) {
+            ps.setString(1, PsqlStore.instOf().findCandidateById(id).getName());
+            ps.setInt(2, id);
+            ps.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
