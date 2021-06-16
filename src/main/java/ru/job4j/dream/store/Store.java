@@ -7,19 +7,25 @@ import java.util.Collection;
 
 public interface Store {
 
-    Collection<Post> findAllPosts();
+    void createPost(Post post);
 
-    Collection<Candidate> findAllCandidates();
+    void updatePost(Post post);
 
     void savePost(Post post);
 
-    void saveCandidate(Candidate candidate);
-
     Post findPostById(int id);
+
+    Collection<Post> findAllPosts();
+
+    void createCandidate(Candidate candidate);
+
+    void updateCandidate(Candidate candidate);
+
+    void saveCandidate(Candidate candidate);
 
     Candidate findCandidateById(int id);
 
-    public void deleteCandidateById(int id);
+    Collection<Candidate> findAllCandidates();
 
-    public void update(int id);
+    void deleteCandidateById(int id);
 }

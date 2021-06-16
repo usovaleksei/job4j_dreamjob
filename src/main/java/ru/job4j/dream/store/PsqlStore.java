@@ -1,6 +1,9 @@
 package ru.job4j.dream.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 
@@ -17,17 +20,19 @@ public class PsqlStore implements Store {
 
     private final BasicDataSource pool = new BasicDataSource();
 
+    private static final Logger LOG = LoggerFactory.getLogger(PsqlStore.class.getName());
+
     private PsqlStore() {
         Properties cfg = new Properties();
         try (BufferedReader io = new BufferedReader(new FileReader("db.properties"))) {
             cfg.load(io);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error reading database settings", e);
         }
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOG.error("Error loading database driver", e);
         }
         this.pool.setDriverClassName(cfg.getProperty("jdbc.driver"));
         this.pool.setUrl(cfg.getProperty("jdbc.url"));
@@ -47,6 +52,25 @@ public class PsqlStore implements Store {
     }
 
     @Override
+    public Post findPostById(int id) {
+        Post post = null;
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("select id, name, description, created from post where id = (?)")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    post.setName(rs.getString("name"));
+                    post.setDescription(rs.getString("description"));
+                    post.setCreated(rs.getTimestamp("created").toLocalDateTime());
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+        return post;
+    }
+
+    @Override
     public Collection<Post> findAllPosts() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = this.pool.getConnection();
@@ -54,35 +78,32 @@ public class PsqlStore implements Store {
             try (
                     ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    posts.add(new Post(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getTimestamp("created").toLocalDateTime()));
+                    posts.add(new Post(rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getTimestamp("created").toLocalDateTime()));
                 }
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
         }
         return posts;
     }
 
     @Override
-    public Collection<Candidate> findAllCandidates() {
-        List<Candidate> candidates = new ArrayList<>();
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("select * from candidate")) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    candidates.add(new Candidate(rs.getInt("id"), rs.getString("name"), rs.getString("photoId")));
-                }
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+    public void savePost(Post post) {
+        if (post.getId() == 0) {
+            createPost(post);
+        } else {
+            updatePost(post);
         }
-        return candidates;
     }
 
     @Override
-    public void savePost(Post post) {
+    public void createPost(Post post) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("insert into post(name, description, created) values (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = cn.prepareStatement("insert into post(name, description, created) values (?, ?, ?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setTimestamp(3, Timestamp.valueOf(post.getCreated()));
@@ -92,15 +113,72 @@ public class PsqlStore implements Store {
                     post.setId(id.getInt(1));
                 }
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
         }
     }
 
     @Override
-    public void saveCandidate(Candidate candidate) {
+    public void updatePost(Post post) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("insert into candidate(name) values (?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = cn.prepareStatement("update post set name = (?) where id = (?)")) {
+            ps.setString(1, post.getName());
+            ps.setInt(2, post.getId());
+            ps.execute();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+    }
+
+    @Override
+    public Candidate findCandidateById(int id) {
+        Candidate candidate = null;
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("select id, name from candidate where id = (?)")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    candidate.setName(rs.getString("name"));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+        return candidate;
+    }
+
+    @Override
+    public Collection<Candidate> findAllCandidates() {
+        List<Candidate> candidates = new ArrayList<>();
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("select * from candidate")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    candidates.add(new Candidate(rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("photoId")));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+        return candidates;
+    }
+
+    @Override
+    public void saveCandidate(Candidate candidate) {
+        if (candidate.getId() == 0) {
+            createCandidate(candidate);
+        } else {
+            updateCandidate(candidate);
+        }
+    }
+
+    @Override
+    public void createCandidate(Candidate candidate) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("insert into candidate(name) values (?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, candidate.getName());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
@@ -114,45 +192,21 @@ public class PsqlStore implements Store {
                     }
                 }
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
         }
     }
 
     @Override
-    public Post findPostById(int id) {
-        Post post = new Post(id, null, null, null);
+    public void updateCandidate(Candidate candidate) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("select id, name, description, created from post where id = (?)")) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    post.setName(rs.getString("name"));
-                    post.setDescription(rs.getString("description"));
-                    post.setCreated(rs.getTimestamp("created").toLocalDateTime());
-                }
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+             PreparedStatement ps = cn.prepareStatement("update candidate set name = (?) where id = (?)")) {
+            ps.setString(1, candidate.getName());
+            ps.setInt(2, candidate.getId());
+            ps.execute();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
         }
-        return post;
-    }
-
-    @Override
-    public Candidate findCandidateById(int id) {
-        Candidate candidate = new Candidate(id, null);
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("select id, name from candidate where id = (?)")) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    candidate.setName(rs.getString("name"));
-                }
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return candidate;
     }
 
     @Override
@@ -161,20 +215,8 @@ public class PsqlStore implements Store {
              PreparedStatement ps = cn.prepareStatement("delete from candidate where id = (?)")) {
             ps.setInt(1, id);
             ps.execute();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-    @Override
-    public void update(int id) {
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("update candidate set name = (?) where id = (?)")) {
-            ps.setString(1, PsqlStore.instOf().findCandidateById(id).getName());
-            ps.setInt(2, id);
-            ps.execute();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
         }
     }
 }
