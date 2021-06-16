@@ -59,9 +59,10 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    post.setName(rs.getString("name"));
-                    post.setDescription(rs.getString("description"));
-                    post.setCreated(rs.getTimestamp("created").toLocalDateTime());
+                    post = new Post(rs.getInt("id"),
+                                    rs.getString("name"),
+                                    rs.getString("description"),
+                                    rs.getTimestamp("created").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
@@ -138,7 +139,8 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    candidate.setName(rs.getString("name"));
+                    candidate = new Candidate(rs.getInt("id"),
+                                              rs.getString("name"));
                 }
             }
         } catch (SQLException e) {
