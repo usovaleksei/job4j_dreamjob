@@ -10,3 +10,10 @@ create table candidate (
     name text,
     photoId text
 );
+
+create table user (
+    id serial primary key,
+    name text,
+    email text,
+    password text
+);

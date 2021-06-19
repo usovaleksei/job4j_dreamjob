@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -216,6 +217,67 @@ public class PsqlStore implements Store {
         try (Connection cn = this.pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("delete from candidate where id = (?)")) {
             ps.setInt(1, id);
+            ps.execute();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+    }
+
+    @Override
+    public void createUser(User user) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("insert into user(name, email, password) values(?, ?, ?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            try (ResultSet id = ps.getGeneratedKeys()) {
+                if (id.next()) {
+                    user.setId(id.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        User user = null;
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("select (id, name, email, password) from user where email = (?)")) {
+                 ps.setString(1, email);
+                 try (ResultSet rs = ps.executeQuery()) {
+                     if (rs.next()) {
+                         user = new User(rs.getInt("id"),
+                                         rs.getString("name"),
+                                         rs.getString("email"),
+                                         rs.getString("password"));
+                     }
+                 }
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+        return user;
+    };
+
+    @Override
+    public void updateUser(User user) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("update user set name = (?) where email = (?)")) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.execute();
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+    };
+
+    @Override
+    public void deleteUserByEmail(String email) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("delete from user where email = (?)")) {
+            ps.setString(1, email);
             ps.execute();
         } catch (SQLException e) {
             LOG.error("Request execution error", e);
