@@ -1,7 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="ru.job4j.dream.model.Candidate" %>
-<%@ page import="ru.job4j.dream.store.PsqlStore" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -26,34 +24,29 @@
 </head>
 <body>
 
-<%String error = (String) request.getAttribute("error");%>
-
 <div class="container pt-3">
 
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Авторизация
+                Регистрация пользователя
             </div>
             <div class="card-body">
-                <form action="<%=request.getContextPath()%>/auth.do" method="post">
+                <form action="<%=request.getContextPath()%>/reg.do" method="post">
                     <div class="form-group">
-                        <label>Почта</label>
+                        <label>Имя пользователя</label>
+                        <input type="text" class="form-control" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
                         <input type="text" class="form-control" name="email">
                     </div>
                     <div class="form-group">
                         <label>Пароль</label>
                         <input type="text" class="form-control" name="password">
                     </div>
-                    <% if (error != null) { %>
-                    <div class="alert alert-warning" role="alert">
-                        <%=error%>
-                    </div>
-                    <% } %>
-                    <button type="submit" class="btn btn-primary">Войти</button>
-                    <a href='<c:url value="/reg.jsp"/>' class="btn btn-primary" role="button">Регистрация</a>
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                 </form>
-                <div >
             </div>
         </div>
     </div>

@@ -226,11 +226,12 @@ public class PsqlStore implements Store {
     @Override
     public void createUser(User user) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("insert into user(name, email, password) values(?, ?, ?)",
+             PreparedStatement ps = cn.prepareStatement("insert into users(name, email, password) values(?, ?, ?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
+            ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
                     user.setId(id.getInt(1));
@@ -245,7 +246,7 @@ public class PsqlStore implements Store {
     public User findUserByEmail(String email) {
         User user = null;
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("select (id, name, email, password) from user where email = (?)")) {
+             PreparedStatement ps = cn.prepareStatement("select id, name, email, password from users where email = (?)")) {
                  ps.setString(1, email);
                  try (ResultSet rs = ps.executeQuery()) {
                      if (rs.next()) {
@@ -264,7 +265,7 @@ public class PsqlStore implements Store {
     @Override
     public void updateUser(User user) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("update user set name = (?) where email = (?)")) {
+             PreparedStatement ps = cn.prepareStatement("update users set name = (?) where email = (?)")) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.execute();
@@ -276,7 +277,7 @@ public class PsqlStore implements Store {
     @Override
     public void deleteUserByEmail(String email) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("delete from user where email = (?)")) {
+             PreparedStatement ps = cn.prepareStatement("delete from users where email = (?)")) {
             ps.setString(1, email);
             ps.execute();
         } catch (SQLException e) {

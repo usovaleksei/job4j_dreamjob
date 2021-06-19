@@ -11,7 +11,7 @@ create table candidate (
     photoId text
 );
 
-create table user (
+create table users (
     id serial primary key,
     name text,
     email text,
