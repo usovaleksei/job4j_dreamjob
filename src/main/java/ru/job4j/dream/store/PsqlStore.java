@@ -261,27 +261,4 @@ public class PsqlStore implements Store {
         }
         return user;
     };
-
-    @Override
-    public void updateUser(User user) {
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("update users set name = (?) where email = (?)")) {
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.execute();
-        } catch (SQLException e) {
-            LOG.error("Request execution error", e);
-        }
-    };
-
-    @Override
-    public void deleteUserByEmail(String email) {
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("delete from users where email = (?)")) {
-            ps.setString(1, email);
-            ps.execute();
-        } catch (SQLException e) {
-            LOG.error("Request execution error", e);
-        }
-    }
 }

@@ -33,8 +33,4 @@ public interface Store {
     void createUser(User user);
 
     User findUserByEmail(String email);
-
-    void updateUser(User user);
-
-    void deleteUserByEmail(String email);
 }
