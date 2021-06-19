@@ -23,7 +23,7 @@
     <title>Работа мечты</title>
 </head>
 <body>
-
+<%String error = (String) request.getAttribute("error");%>
 <div class="container pt-3">
 
     <div class="row">
@@ -45,6 +45,11 @@
                         <label>Пароль</label>
                         <input type="text" class="form-control" name="password">
                     </div>
+                    <% if (error != null) { %>
+                    <div class="alert alert-warning" role="alert">
+                        <%=error%>
+                    </div>
+                    <% } %>
                     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                 </form>
             </div>
