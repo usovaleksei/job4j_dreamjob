@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="ru.job4j.dream.model.Candidate" %>
+<%@ page import="ru.job4j.dream.store.PsqlStore" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -51,6 +53,7 @@
                     <button type="submit" class="btn btn-primary">Войти</button>
                     <a href='<c:url value="/reg.jsp"/>' class="btn btn-primary" role="button">Регистрация</a>
                 </form>
+                <div >
             </div>
         </div>
     </div>

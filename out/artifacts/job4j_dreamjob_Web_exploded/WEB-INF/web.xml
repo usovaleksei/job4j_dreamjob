@@ -82,22 +82,6 @@
   </servlet-mapping>
   <filter-mapping>
     <filter-name>AuthFilter</filter-name>
-    <url-pattern>*.do</url-pattern>
+    <url-pattern>/post/*</url-pattern>
   </filter-mapping>
-  <servlet>
-    <servlet-name>EditPost</servlet-name>
-    <jsp-file>/post/edit.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditPost</servlet-name>
-    <url-pattern>/editpost.do</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditCandidate</servlet-name>
-    <jsp-file>/candidate/edit.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditCandidate</servlet-name>
-    <url-pattern>/editcandidate.do</url-pattern>
-  </servlet-mapping>
 </web-app>
