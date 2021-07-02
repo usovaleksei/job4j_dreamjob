@@ -2,14 +2,14 @@ package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MemStore {
+public class MemStore implements Store {
 
     private static final MemStore INST = new MemStore();
 
@@ -18,14 +18,9 @@ public class MemStore {
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
+    private final Map<String, User> users = new ConcurrentHashMap<>();
 
     private MemStore() {
-        posts.put(1, new Post(1, "Junior Java Job", "Write code as junior", LocalDateTime.now().minusHours(1)));
-        posts.put(2, new Post(2, "Middle Java Job", "Write code as middle", LocalDateTime.now().minusHours(3)));
-        posts.put(3, new Post(3, "Senior Java Job", "Write code as senior", LocalDateTime.now().minusHours(5)));
-        candidates.put(1, new Candidate(1, "Junior JAva"));
-        candidates.put(2, new Candidate(2, "Middle JAva"));
-        candidates.put(3, new Candidate(3, "Senior JAva"));
     }
 
     public static MemStore instOf() {
@@ -36,26 +31,54 @@ public class MemStore {
         return this.posts.values();
     }
 
+    @Override
+    public void createCandidate(Candidate candidate) {
+        candidate.setId(CAND_ID.incrementAndGet());
+        this.candidates.put(candidate.getId(), candidate);
+    }
+
+    @Override
+    public void updateCandidate(Candidate candidate) {
+        this.candidates.replace(candidate.getId(), candidate);
+
+    }
+
+    @Override
+    public void saveCandidate(Candidate candidate) {
+        if (candidate.getId() == 0) {
+            createCandidate(candidate);
+        } else {
+            updateCandidate(candidate);
+        }
+    }
+
     public Collection<Candidate> findAllCandidates() {
         return this.candidates.values();
     }
 
-    public void save(Post post) {
-        if (post.getId() == 0) {
-            post.setId(POST_ID.incrementAndGet());
-        }
+    @Override
+    public void createPost(Post post) {
+        post.setId(POST_ID.incrementAndGet());
         this.posts.put(post.getId(), post);
+
+    }
+
+    @Override
+    public void updatePost(Post post) {
+        this.posts.replace(post.getId(), post);
+    }
+
+    @Override
+    public void savePost(Post post) {
+        if (post.getId() == 0) {
+            createPost(post);
+        } else {
+            updatePost(post);
+        }
     }
 
     public Post findPostById(int id) {
         return this.posts.get(id);
-    }
-
-    public void save(Candidate candidate) {
-        if (candidate.getId() == 0) {
-            candidate.setId(CAND_ID.incrementAndGet());
-        }
-        this.candidates.put(candidate.getId(), candidate);
     }
 
     public Candidate findCandidateById(int id) {
@@ -64,5 +87,19 @@ public class MemStore {
 
     public void deleteCandidateById(int id) {
         this.candidates.remove(id);
+    }
+
+    @Override
+    public void createUser(User user) {
+        if (user.getId() == 0) {
+            user.setId(POST_ID.incrementAndGet());
+        }
+        this.users.put(user.getEmail(), user);
+
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return this.users.get(email);
     }
 }
