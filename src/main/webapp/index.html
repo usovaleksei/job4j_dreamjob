@@ -23,6 +23,20 @@
             }
         }
     </script>
+    <script>
+        function addRow() {
+            var name = $('#name').val();
+            var surname = $('#surname').val();
+            var gender = $('#gender').val();
+            var descr = $('#descr').val();
+            $('#table tr:last').after('<tr>' +
+                '<td>' + name + '</td>' +
+                '<td>' + surname + '</td>' +
+                '<td>' + gender + '</td>' +
+                '<td>' + descr + '</td>' +
+                '</tr>');
+        }
+    </script>
 </head>
 <body>
 
@@ -31,7 +45,7 @@
     <p>This is some text.</p>
 </div>
 
-<form class="form-horizontal">
+<form class="form-horizontal" action="index.html">
     <div class="form-group">
         <label class="control-label col-sm-2" for="name">Name:</label>
         <div class="col-sm-2">
@@ -65,12 +79,13 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-default" onclick="return validate()">Submit</button>
+            <button type="submit" class="btn btn-default" onclick="validate()">Check</button>
+            <button type="reset" class="btn btn-default" onclick="addRow()">Add row</button>
         </div>
     </div>
 </form>
 <div class="container-fluid">
-    <table class="table table-hover table-bordered" style="width: 50%">
+    <table id="table" class="table table-hover table-bordered" style="width: 50%">
         <thead>
         <tr>
             <th>Name</th>
@@ -80,27 +95,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
         </tbody>
     </table>
 </div>
-
 </body>
 </html>
