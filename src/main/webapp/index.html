@@ -9,18 +9,24 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         function validate() {
+            let rsl = true;
             if ($('#name').val() === "") {
                 alert("Enter name");
+                rsl = false;
             }
             if ($('#surname').val() === "") {
                 alert("Enter surname");
+                rsl = false;
             }
             if ($('#gender').val() === '') {
                 alert("Enter gender");
+                rsl = false;
             }
             if ($('#descr').val() === '') {
                 alert("Enter description");
+                rsl = false;
             }
+            return rsl;
         }
     </script>
     <script>
