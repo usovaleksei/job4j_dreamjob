@@ -3,7 +3,7 @@
 <%@ page import="ru.job4j.dream.model.Post" %>
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="ru.job4j.dream.store.PsqlStore" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
