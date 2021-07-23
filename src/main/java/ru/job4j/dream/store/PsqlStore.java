@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
@@ -61,9 +62,9 @@ public class PsqlStore implements Store {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     post = new Post(rs.getInt("id"),
-                                    rs.getString("name"),
-                                    rs.getString("description"),
-                                    rs.getTimestamp("created").toLocalDateTime());
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getTimestamp("created").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
@@ -141,7 +142,7 @@ public class PsqlStore implements Store {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     candidate = new Candidate(rs.getInt("id"),
-                                              rs.getString("name"));
+                            rs.getString("name"));
                 }
             }
         } catch (SQLException e) {
@@ -159,6 +160,7 @@ public class PsqlStore implements Store {
                 while (rs.next()) {
                     candidates.add(new Candidate(rs.getInt("id"),
                             rs.getString("name"),
+                            rs.getInt("cityId"),
                             rs.getString("photoId")));
                 }
             }
@@ -247,18 +249,35 @@ public class PsqlStore implements Store {
         User user = null;
         try (Connection cn = this.pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("select id, name, email, password from users where email = (?)")) {
-                 ps.setString(1, email);
-                 try (ResultSet rs = ps.executeQuery()) {
-                     if (rs.next()) {
-                         user = new User(rs.getInt("id"),
-                                         rs.getString("name"),
-                                         rs.getString("email"),
-                                         rs.getString("password"));
-                     }
-                 }
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password"));
+                }
+            }
         } catch (SQLException e) {
             LOG.error("Request execution error", e);
         }
         return user;
-    };
+    }
+
+    @Override
+    public List<City> findAllCities() {
+        List<City> listCities = new ArrayList<>();
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("select * from cities")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    listCities.add(new City(rs.getInt("id"),
+                            rs.getString("city")));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+        return listCities;
+    }
 }

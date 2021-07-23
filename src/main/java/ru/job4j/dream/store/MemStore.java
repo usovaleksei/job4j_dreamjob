@@ -1,6 +1,7 @@
 package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
@@ -19,6 +20,7 @@ public class MemStore implements Store {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
     private final Map<String, User> users = new ConcurrentHashMap<>();
+    private final Map<String, City> cities = new ConcurrentHashMap<>();
 
     private MemStore() {
     }
@@ -101,5 +103,10 @@ public class MemStore implements Store {
     @Override
     public User findUserByEmail(String email) {
         return this.users.get(email);
+    }
+
+    @Override
+    public Collection<City> findAllCities() {
+        return this.cities.values();
     }
 }

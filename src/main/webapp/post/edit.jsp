@@ -26,6 +26,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>Работа мечты</title>
+    <script>
+        function validate() {
+            let rsl = true;
+            if ($('#name').val() === "") {
+                alert("Enter title");
+                rsl = false;
+            }
+            if ($('#description').val() === "") {
+                alert("Enter description");
+                rsl = false;
+            }
+            return rsl;
+        }
+    </script>
 </head>
 <body>
 <%
@@ -67,18 +81,18 @@
             <div class="card-body">
                 <form action="<%=request.getContextPath()%>/post/posts.do?id=<%=post.getId()%>" method="post">
                     <div class="form-group">
-                        <label>Имя</label>
+                        <label>Заголовок</label>
                         <label>
-                            <input type="text" class="form-control" name="name" value="<%=post.getName()%>">
+                            <input type="text" class="form-control" id="name" name="name" value="<%=post.getName()%>">
                         </label>
                     </div>
                     <div class="form-group">
                         <label>Описание</label>
                         <label>
-                            <input type="text" class="form-control" name="description" value="<%=post.getDescription()%>">
+                            <input type="text" class="form-control" id="description" name="description" value="<%=post.getDescription()%>">
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-primary" onclick="return validate()">Сохранить</button>
                 </form>
             </div>
         </div>

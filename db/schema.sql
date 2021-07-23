@@ -17,3 +17,8 @@ create table users (
     email text unique,
     password text
 );
+
+create table cities (
+	id serial primary key,
+	city text
+)
