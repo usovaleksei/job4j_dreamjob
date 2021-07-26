@@ -182,9 +182,10 @@ public class PsqlStore implements Store {
     @Override
     public void createCandidate(Candidate candidate) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("insert into candidate(name) values (?)",
+             PreparedStatement ps = cn.prepareStatement("insert into candidate(name, cityid) values (?, ?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, candidate.getName());
+            ps.setInt(2, candidate.getCityId());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -279,5 +280,23 @@ public class PsqlStore implements Store {
             LOG.error("Request execution error", e);
         }
         return listCities;
+    }
+
+    @Override
+    public City findCityById(int id) {
+        City city = null;
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("select id, city from cities where id = (?)")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    city = new City(rs.getInt("id"),
+                            rs.getString("city"));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Request execution error", e);
+        }
+        return city;
     }
 }

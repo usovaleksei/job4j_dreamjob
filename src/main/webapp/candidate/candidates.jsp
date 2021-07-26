@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="ru.job4j.dream.store.PsqlStore" %>
+<%@ page import="ru.job4j.dream.model.City" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -55,6 +57,7 @@
                     <thead>
                     <tr>
                         <th scope="col">Кандидат</th>
+                        <th scope="col">Город</th>
                         <th scope="col">Фото</th>
                     </tr>
                     </thead>
@@ -68,9 +71,12 @@
                                 <c:out value="${candidate.name}"/>
                             </td>
                             <td>
+                                <c:out value="${PsqlStore.instOf().findCityById(candidate.cityId).city}"/>
+                            </td>
+                            <td>
                                 <img src="<c:url value='/download?photoId=${candidate.id}'/>" width="100px" height="100px"/>
-                                <a href='<c:url value="/candidate/photoUpload.jsp?id=${candidate.id}"/>' class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add photo</a>
-                                <a href='<c:url value="/photoDelete?id=${candidate.id}"/>' class="btn btn-primary btn-lg active" role="button" aria-pressed="true" >Delete</a>
+                                <a href='<c:url value="/candidate/photoUpload.jsp?id=${candidate.id}"/>' class="btn btn-outline-primary btn-xs" role="button">Add photo</a>
+                                <a href='<c:url value="/photoDelete?id=${candidate.id}"/>' class="btn btn-outline-primary btn-xs" role="button" >Delete candidate</a>
                             </td>
                         </tr>
                     </c:forEach>

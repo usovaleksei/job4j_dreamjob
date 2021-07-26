@@ -36,4 +36,6 @@ public interface Store {
     User findUserByEmail(String email);
 
     Collection<City> findAllCities();
+
+    City findCityById(int id);
 }

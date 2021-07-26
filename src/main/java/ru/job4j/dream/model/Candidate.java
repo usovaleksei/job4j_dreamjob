@@ -18,6 +18,12 @@ public class Candidate {
         this.name = name;
     }
 
+    public Candidate(int id, String name, int cityId) {
+        this.id = id;
+        this.name = name;
+        this.cityId = cityId;
+    }
+
     public Candidate(int id, String name, int cityId, String photoId) {
         this.id = id;
         this.name = name;

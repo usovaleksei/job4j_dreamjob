@@ -50,13 +50,15 @@
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Вакансии
+                Текущие вакансии
             </div>
             <div class="card-body">
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Названия</th>
+                        <th scope="col">Вакансия</th>
+                        <th scope="col">Описание</th>
+                        <th scope="col">Дата публикации</th>
                     </tr>
                     </thead>
                     <tbody>

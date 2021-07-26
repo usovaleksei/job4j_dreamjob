@@ -109,4 +109,9 @@ public class MemStore implements Store {
     public Collection<City> findAllCities() {
         return this.cities.values();
     }
+
+    @Override
+    public City findCityById(int id) {
+        return this.cities.get(id);
+    }
 }

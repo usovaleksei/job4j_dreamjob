@@ -31,10 +31,11 @@ public class PsqlMain {
             System.out.println("id: " + candidate.getId() + " name: " + candidate.getName());
         }*/
 
-        User user = new User("Alex", "al.e.u@mail.ru", "123");
+        /*User user = new User("Alex", "al.e.u@mail.ru", "123");
         User user1 = new User("Olga", "olga@mail.ru", "456");
         store.createUser(user);
-        store.createUser(user1);
-        System.out.println(store.findUserByEmail("olga@mail.ru"));
+        store.createUser(user1);*/
+        //System.out.println(store.findUserByEmail("olga@mail.ru"));
+        System.out.println(PsqlStore.instOf().findCityById(5));
     }
 }

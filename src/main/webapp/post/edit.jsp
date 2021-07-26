@@ -92,7 +92,7 @@
                             <input type="text" class="form-control" id="description" name="description" value="<%=post.getDescription()%>">
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-primary" onclick="return validate()">Сохранить</button>
+                    <button type="submit" class="btn btn-outline-primary btn-xs" onclick="return validate()">Сохранить</button>
                 </form>
             </div>
         </div>
