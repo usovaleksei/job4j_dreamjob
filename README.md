@@ -2,13 +2,13 @@
 [![Build Status](https://travis-ci.com/usovaleksei/job4j_dreamjob.svg?branch=master)](https://travis-ci.com/usovaleksei/job4j_dreamjob)
 [![codecov](https://codecov.io/gh/usovaleksei/job4j_dreamjob/branch/master/graph/badge.svg?token=GOUEVPDH5I)](https://codecov.io/gh/usovaleksei/job4j_dreamjob)
 
-##Dream Job - площадка для размещения вакансий и кандидатов.
+### Dream Job - площадка для размещения вакансий и кандидатов.
 
-##Функционал
+### Функционал
 - CRUD операции с PostgreSQL и JDBC для вакансий и кандидатов.
 - Авторизация/регистрация. Учётные данные хранятся в БД. Без авторизации ограничен доступ к некоторым страницам.
 
-##Используемые технологии
+### Используемые технологии
 - Servlet/JSP
 - JDBC/PostgreSQL
 - Maven
