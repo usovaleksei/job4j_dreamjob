@@ -19,21 +19,21 @@ JS, AJAX, JSP, HTML (front)
 Архитектурный паттерн MVC
 
 Страница регистрации:
-https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/registration_page.JPG
+![alt text](https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/registration_page.JPG)
 
 Страница авторизации:
-https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/auth_page.JPG
+![alt text](https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/auth_page.JPG)
 
 Страница текущих вакансий:
-https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/current_vacancy.JPG
+![alt text](https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/current_vacancy.JPG)
 
 Страница кандидатов:
-https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/candidate_page.JPG
+![alt text](https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/candidate_page.JPG)
 
 Страница добавления вакансии:
-https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/add_vacancy_page.JPG
+![alt text](https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/add_vacancy_page.JPG)
 
 Страница добавления кандидата:
-https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/add_candidate_page.JPG
+![alt text](https://github.com/usovaleksei/job4j_dreamjob/blob/master/images/add_candidate_page.JPG)
 
 
